@@ -18,5 +18,6 @@ Settings::Exception::Setting::Setting() :
 Settings::Example::Setting::Setting() :
         showTask1DebugMessage(true),
         showTask2DebugMessage(true),
-        showTask3DebugMessage(true)
+        showTask3DebugMessage(true),
+        showMainDebugMessage(true)
 {}

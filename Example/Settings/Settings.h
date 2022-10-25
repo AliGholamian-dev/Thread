@@ -32,6 +32,7 @@ namespace Settings {
             const bool showTask1DebugMessage;
             const bool showTask2DebugMessage;
             const bool showTask3DebugMessage;
+            const bool showMainDebugMessage;
         } extern setting;
     }
 }
