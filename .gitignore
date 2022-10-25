@@ -1,0 +1,24 @@
+# C++ objects and libs
+*.slo
+*.lo
+*.o
+*.a
+*.la
+*.lai
+*.so
+*.lib
+*.dll
+*.dylib
+
+#Common Files
+*.csv
+*.rar
+*.bin
+*.txt
+
+# Folders
+Makefile*
+*build-*
+.idea/
+
+!CMakeLists.txt
