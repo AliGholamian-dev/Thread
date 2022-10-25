@@ -63,6 +63,10 @@ namespace ThreadNS {
         return thread.get_id();
     }
 
+    unsigned int Thread::getMaxNumberOfConcurrentThreads() {
+        return std::thread::hardware_concurrency();
+    }
+
     bool Thread::checkForRepetitiveID(const TaskID& taskID) {
         if (taskID == 0)
             return true;

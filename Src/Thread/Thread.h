@@ -35,6 +35,7 @@ namespace ThreadNS {
             [[nodiscard]] bool isRunning() const;
             [[nodiscard]] bool isPaused() const;
             [[nodiscard]] ThreadID getID() const;
+            static unsigned int getMaxNumberOfConcurrentThreads();
 
             TaskID queueTaskForAddition(std::shared_ptr<Task>& task, TaskType taskType);
             void queueTaskForRemoval(const TaskID& taskID);
