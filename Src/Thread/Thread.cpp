@@ -8,7 +8,7 @@ namespace ThreadNS {
             it(tasks.begin()) {}
 
     Thread::~Thread() {
-        requestTermination();
+        threadState = ThreadState::terminated;
         thread.detach();
     }
 
