@@ -4,6 +4,7 @@
 #include <thread>
 #include <mutex>
 #include <list>
+#include <optional>
 #include "CurrentThread.h"
 #include "ThreadID.h"
 #include "TaskID.h"
@@ -25,24 +26,29 @@ namespace ThreadNS {
             Thread();
             ~Thread();
 
-            bool requestStart();
-            bool requestPause();
-            bool requestQuit();
+            void requestStart();
+            void requestResume();
+            void requestPause();
+            void requestQuitOnEndOfTaskLoop();
             void requestTermination();
             void wait() const volatile;
 
 
+            [[nodiscard]] bool isStarted() const volatile;
             [[nodiscard]] bool isRunning() const;
             [[nodiscard]] bool isPaused() const;
+            [[nodiscard]] bool isFinished() const volatile;
             [[nodiscard]] ThreadID getID() const;
             static unsigned int getMaxNumberOfConcurrentThreads();
 
-            TaskID queueTaskForAddition(std::shared_ptr<Task>& task, TaskType taskType);
+            std::optional<TaskID> queueTaskForAddition(const std::shared_ptr<Task>& task, TaskType taskType);
+            std::optional<TaskID> queueTaskForAddition(Task* task, TaskType taskType);
             void queueTaskForRemoval(const TaskID& taskID);
 
         private:
             enum class Request {
                 start,
+                resume,
                 pause,
                 quit,
                 terminate,
@@ -50,17 +56,18 @@ namespace ThreadNS {
             };
 
             enum class ThreadState {
+                notStarted,
                 idle,
                 running,
-                quiting,
-                termination,
                 terminated
             };
 
             struct TaskInfo{
                 TaskID taskID;
                 TaskType taskType;
-                std::shared_ptr<Task> task;
+                std::shared_ptr<Task> taskSharedPointer;
+                Task* taskRawPointer;
+                std::weak_ptr<bool> aliveCheck;
             };
 
             bool checkForRepetitiveID(const TaskID& taskID);
@@ -75,20 +82,24 @@ namespace ThreadNS {
             void handleStateMachine();
             void provideNextIterator();
             void run();
+            void clearLists();
 
 
-            bool idCounterOverflowedOnce { false };
-            TaskID taskIDCounter { 0 };
+            ThreadState threadState { ThreadState::notStarted };
             Request request { Request::none };
-            ThreadState threadState { ThreadState::idle };
+            TaskID taskIDCounter { 0 };
+            bool idCounterOverflowedOnce { false };
             bool atEnd { false };
             bool wasEmptyBefore { true };
             bool deleteTask { false };
+            bool quitOnEndOfTaskLoop { false };
+
             std::jthread thread;
             std::list<TaskInfo> tasks;
             std::list<TaskInfo> toBeAddedTasks;
             std::list<TaskID> toBeDeletedTasks;
             std::list<TaskID> accumulatedToBeDeletedTasks;
+            std::mutex requestMutex;
             std::mutex deletionListCopyMutex;
             std::mutex additionListCopyMutex;
             std::list<TaskInfo>::iterator it;
