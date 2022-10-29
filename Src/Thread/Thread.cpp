@@ -9,7 +9,6 @@ namespace ThreadNS {
 
     Thread::~Thread() {
         threadState = ThreadState::terminated;
-        thread.detach();
     }
 
     void Thread::requestStart() {

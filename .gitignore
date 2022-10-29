@@ -18,7 +18,7 @@
 
 # Folders
 Makefile*
-*build-*
+*build*
 .idea/
 
 !CMakeLists.txt

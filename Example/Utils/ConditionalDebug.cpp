@@ -43,7 +43,7 @@ ConditionalDebug& ConditionalDebug::withSpace() {
 void ConditionalDebug::prepareDebugFile() const {
     std::lock_guard<std::mutex> guard(mutex);
     if(debugInFile) {
-        if (!fileHolder || (fileHolder && fileHolder->file.tellp() > maxFileSize)) {
+        if (!fileHolder || (fileHolder && (static_cast<uint64_t>(fileHolder->file.tellp()) > maxFileSize))) {
             bool directorExists = std::filesystem::is_directory("DebugOutput");
             if (!directorExists) {
                 bool directorCreated = std::filesystem::create_directory("DebugOutput");

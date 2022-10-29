@@ -5,8 +5,6 @@
 namespace ThreadNS::CurrentThread {
     ThreadID getID();
 
-    void sleepUntil(const xtime* absoluteTime);
-
     template <class Clock, class Duration>
     void sleepUntil(const std::chrono::time_point<Clock, Duration>& absoluteTime) {
         std::this_thread::sleep_until(absoluteTime);

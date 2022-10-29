@@ -3,6 +3,7 @@
 #include "FileHolder.h"
 #include <iostream>
 #include <mutex>
+#include <memory>
 
 class ConditionalDebug final {
     public:

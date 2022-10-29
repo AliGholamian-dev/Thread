@@ -3,13 +3,19 @@
 #include "Settings.h"
 #include "ConditionalDebug.h"
 #include <exception>
-#include <utility>
 
 class Exception : public std::exception {
     public:
-        explicit Exception(const std::string& message) : std::exception(message.c_str()) {
+        explicit Exception(const std::string& message) : message(message){
             printExceptionMessage(message);
         }
+        ~Exception() noexcept override = default;
+
+
+        [[nodiscard]] const char* what() const noexcept override {
+            return message.c_str();
+        }
+
 
     private:
         static void printExceptionMessage(const std::string& message) {
@@ -18,6 +24,8 @@ class Exception : public std::exception {
             debug << message;
             debug << std::endl << "----------------------------------------" << std::endl;
         }
+
+        const std::string message;
 };
 
 class NullptrException final : public Exception {

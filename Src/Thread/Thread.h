@@ -5,6 +5,7 @@
 #include <mutex>
 #include <list>
 #include <optional>
+#include <memory>
 #include "CurrentThread.h"
 #include "ThreadID.h"
 #include "TaskID.h"
